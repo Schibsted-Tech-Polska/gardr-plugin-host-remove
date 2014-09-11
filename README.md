@@ -4,7 +4,9 @@ Gardr plugin to remove iframes from host based on certain conditions.
 
 ## Install
 
-    ```npm install gardr-plugin-host-remove --save```
+```
+npm install gardr-plugin-host-remove --save
+```
 
 ## Bundle
 In your host bundle file:
@@ -21,7 +23,9 @@ In your host bundle file:
 ## Options
 
 ```removeOnTimeout``` - number, amount of miliseconds after which iframe will be removed if it doesn't respond to host.
+
 ```removeOnFailure``` - boolean, indicating wether iframe should be removed if it fails to render.
+
 ```removeBySize``` - object containing size threshold which if not met will result in iframe removal. Syntax:
 ```javascript
 removeBySize: {
