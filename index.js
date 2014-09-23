@@ -30,7 +30,7 @@ var remove = function(gardrPluginApi) {
             });
         }
 
-        if(item.options.removeOnFailure && item.state.hasFailed() && item.iframe.wrapper && item.iframe.wrapper.parentNode) { // remove upon failure
+        if(item.options.removeOnFailure && item.hasFailed() && item.iframe.wrapper && item.iframe.wrapper.parentNode) { // remove upon failure
             item.iframe.remove();
         }
 

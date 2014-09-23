@@ -18,10 +18,8 @@ var mockItem = function() {
                 parentNode: {}
             }
         },
-        state: {
-            hasFailed: function() {
-                return false;
-            }
+        hasFailed: function() {
+            return false;
         }
     };
 };
@@ -103,7 +101,7 @@ describe('remove-host', function() {
 
     it('should remove failed items when options.removeOnFailure is true', function() {
         var item = mockItem();
-        item.state.hasFailed = function() {
+        item.hasFailed = function() {
             return true;
         };
         item.options.removeOnFailure = true;
