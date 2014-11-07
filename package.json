@@ -1,6 +1,6 @@
 {
   "name": "gardr-plugin-host-remove",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "author": "Krystian Jarmicki <krystian.jarmicki@schibsted.pl>",
   "license": "MIT",
   "description": "Gardr plugin that automatically removes iframes based on certain conditions",
@@ -13,7 +13,8 @@
     "test": "./node_modules/.bin/mocha"
   },
   "dependencies": {
-    "gardr-core-plugin": "0.0.1"
+    "gardr-core-plugin": "0.0.1",
+    "cross-domain-events": "^0.0.2"
   },
   "devDependencies": {
     "sinon": "^1.9.1",

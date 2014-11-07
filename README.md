@@ -34,6 +34,8 @@ removeBySize: {
 }
 ```
 
+```removeCheckDelay``` - number, amount of miliseconds after which check will be performed (default: 0). Requires [Send Size Plugin](https://github.com/Schibsted-Tech-Polska/gardr-plugin-ext-send-size)
+
 ## Example
 
 ```javascript

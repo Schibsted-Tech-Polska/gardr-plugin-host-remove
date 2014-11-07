@@ -1,46 +1,74 @@
 'use strict';
 
+var xde = require('cross-domain-events');
+
 // container with items that should be removed if they do not respond after certain time
-var watchedForTimeout = [];
+var watched = [];
+
 
 var remove = function(gardrPluginApi) {
 
-    gardrPluginApi.on('item:beforerender', function(item) {
-
-        if(typeof item.options.removeOnTimeout === 'number') { // watch this item
-            watchedForTimeout.push({
-                item: item,
-                removeTimeout: setTimeout(function() {
-                    item.iframe.remove();
-                }, item.options.removeOnTimeout)
-            });
-        }
-
-    });
-
-
-    gardrPluginApi.on('item:afterrender', function(item) {
-
-        if(item.options.removeOnTimeout) {
-            watchedForTimeout = watchedForTimeout.filter(function(watched) { // stop watching item
-                if(watched.item.id === item.id) {
-                    clearTimeout(watched.removeTimeout);
-                    return true;
-                }
-            });
-        }
-
+    var tryRemove = function(item) {
         if(item.options.removeOnFailure && item.hasFailed() && item.iframe.wrapper && item.iframe.wrapper.parentNode) { // remove upon failure
             item.iframe.remove();
         }
 
         if(typeof item.options.removeBySize === 'object' && // remove when rendered size is smaller than threshold
-            (
-                (typeof item.options.removeBySize.minWidth === 'number' && item.rendered.width < item.options.removeBySize.minWidth) ||
-                (typeof item.options.removeBySize.minHeight === 'number' && item.rendered.height < item.options.removeBySize.minHeight)
-            )
-        ) {
-            item.iframe.remove();
+           (
+               (typeof item.options.removeBySize.minWidth === 'number' && item.rendered.width < item.options.removeBySize.minWidth) ||
+                   (typeof item.options.removeBySize.minHeight === 'number' && item.rendered.height < item.options.removeBySize.minHeight)
+        )
+          ) {
+              item.iframe.remove();
+          }
+    };
+
+    xde.on('plugin:send-size', function(response) {
+        var id = response.data.id,
+            size = response.data.size,
+            singleWatched = watched.filter(function(singleWatched) {
+                return singleWatched.item.id === id;
+            });
+
+        if(singleWatched && singleWatched[0]) {
+            singleWatched[0].item.rendered = size;
+            tryRemove(singleWatched[0].item);
+        }
+    });
+
+    gardrPluginApi.on('item:beforerender', function(item) {
+        var toPush = {
+            item: item
+        };
+
+        if(typeof item.options.removeOnTimeout === 'number') { // watch this item
+            toPush.removeTimeout = setTimeout(function() {
+                item.iframe.remove();
+            }, item.options.removeOnTimeout);
+        }
+
+        watched.push(toPush);
+    });
+
+
+    gardrPluginApi.on('item:afterrender', function(item) {
+        var delay = item.options.removeCheckDelay || 0;
+
+        if(item.options.removeOnTimeout) {
+            watched.forEach(function(singleWatched) {
+                if(singleWatched.item.id === item.id) {
+                    clearTimeout(singleWatched.removeTimeout);
+                }
+            });
+        }
+
+        if(delay > 0) {
+            setTimeout(function() {
+                xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
+            }, delay);
+        }
+        else {
+            tryRemove(item);
         }
 
     });
