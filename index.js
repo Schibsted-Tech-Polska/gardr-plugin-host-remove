@@ -64,7 +64,9 @@ var remove = function(gardrPluginApi) {
 
         if(delay > 0) {
             setTimeout(function() {
-                xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
+                if(item.iframe.element && item.iframe.element.contentWindow !== null) {
+                    xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
+                }
             }, delay);
         }
         else {
