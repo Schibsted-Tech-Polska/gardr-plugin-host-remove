@@ -147,5 +147,22 @@ describe('remove-host', function() {
         pluginApi.trigger('item:afterrender', item);
         assert(!item.iframe.remove.calledOnce, 'item.iframe.remove was not called');
     });
+
+    it('should call the removeCallback after item removal', function() {
+        var item = mockItem();
+        item.options.removeBySize = {
+            minWidth: 1,
+        };
+        item.options.removeCallback = sinon.spy();
+        remove(pluginApi);
+
+        pluginApi.trigger('item:beforerender', item);
+        item.rendered.width = 0;
+        item.rendered.height = 0;
+        pluginApi.trigger('item:afterrender', item);
+        assert(item.iframe.remove.calledOnce, 'item.iframe.remove was called');
+        assert(item.options.removeCallback.calledOnce, 'removeCallback was called');
+        assert(item.options.removeCallback.calledWith(item), 'removeCallback was called with item as a parameter');
+    });
     
 });

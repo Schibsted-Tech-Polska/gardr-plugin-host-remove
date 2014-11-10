@@ -9,18 +9,26 @@ var watched = [];
 var remove = function(gardrPluginApi) {
 
     var tryRemove = function(item) {
+        var removed = false;
+
         if(item.options.removeOnFailure && item.hasFailed() && item.iframe.wrapper && item.iframe.wrapper.parentNode) { // remove upon failure
             item.iframe.remove();
+            removed = true;
         }
 
         if(typeof item.options.removeBySize === 'object' && // remove when rendered size is smaller than threshold
-           (
+            (
                (typeof item.options.removeBySize.minWidth === 'number' && item.rendered.width < item.options.removeBySize.minWidth) ||
                    (typeof item.options.removeBySize.minHeight === 'number' && item.rendered.height < item.options.removeBySize.minHeight)
-        )
-          ) {
+            )
+        ) {
               item.iframe.remove();
-          }
+              removed = true;
+        }
+
+        if(removed && typeof item.options.removeCallback === 'function') {
+            item.options.removeCallback(item);
+        }
     };
 
     xde.on('plugin:send-size', function(response) {
