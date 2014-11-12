@@ -72,8 +72,21 @@ var remove = function(gardrPluginApi) {
 
         if(delay > 0) {
             setTimeout(function() {
-                if(item.iframe.element && typeof item.iframe.element.contentWindow === 'object' && typeof item.iframe.element.contentWindow.postMessage === 'function') {
-                    xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
+                var iframeElement = item.iframe.element,
+                    targetWindow;
+
+                if(iframeElement) {
+                    if(typeof iframeElement.contentWindow === 'object' &&
+                       typeof iframeElement.contentWindow.postMessage === 'function') {
+                        targetWindow = iframeElement.contentWindow;
+                    }
+                    else if(typeof iframeElement.contentDocument.contentWindow === 'object' &&
+                            typeof iframeElement.contentDocument.contentWindow === 'function') {
+                        targetWindow = iframeElement.contentDocument.contentWindow;
+                    }
+                    if(targetWindow) {
+                        xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
+                    }
                 }
             }, delay);
         }
