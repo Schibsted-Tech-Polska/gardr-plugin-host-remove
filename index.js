@@ -72,7 +72,7 @@ var remove = function(gardrPluginApi) {
 
         if(delay > 0) {
             setTimeout(function() {
-                if(item.iframe.element && item.iframe.element.contentWindow !== null) {
+                if(item.iframe.element && typeof item.iframe.element.contentWindow === 'object' && typeof item.iframe.element.contentWindow.postMessage === 'function') {
                     xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
                 }
             }, delay);
