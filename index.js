@@ -81,7 +81,7 @@ var remove = function(gardrPluginApi) {
                         targetWindow = iframeElement.contentWindow;
                     }
                     else if(typeof iframeElement.contentDocument.contentWindow === 'object' &&
-                            typeof iframeElement.contentDocument.contentWindow === 'function') {
+                            typeof iframeElement.contentDocument.contentWindow.postMessage === 'function') {
                         targetWindow = iframeElement.contentDocument.contentWindow;
                     }
                     if(targetWindow) {
