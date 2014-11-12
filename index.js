@@ -72,21 +72,11 @@ var remove = function(gardrPluginApi) {
 
         if(delay > 0) {
             setTimeout(function() {
-                var iframeElement = item.iframe.element,
-                    targetWindow;
+                var iframeElement = item.iframe.element;
 
-                if(iframeElement) {
-                    if(typeof iframeElement.contentWindow === 'object' &&
+                if(iframeElement && typeof iframeElement.contentWindow === 'object' &&
                        typeof iframeElement.contentWindow.postMessage === 'function') {
-                        targetWindow = iframeElement.contentWindow;
-                    }
-                    else if(typeof iframeElement.contentDocument.contentWindow === 'object' &&
-                            typeof iframeElement.contentDocument.contentWindow.postMessage === 'function') {
-                        targetWindow = iframeElement.contentDocument.contentWindow;
-                    }
-                    if(targetWindow) {
-                        xde.sendTo(targetWindow, 'plugin:send-size');
-                    }
+                    xde.sendTo(iframeElement.contentWindow, 'plugin:send-size');
                 }
             }, delay);
         }
