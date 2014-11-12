@@ -85,7 +85,7 @@ var remove = function(gardrPluginApi) {
                         targetWindow = iframeElement.contentDocument.contentWindow;
                     }
                     if(targetWindow) {
-                        xde.sendTo(item.iframe.element.contentWindow, 'plugin:send-size');
+                        xde.sendTo(targetWindow, 'plugin:send-size');
                     }
                 }
             }, delay);
