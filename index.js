@@ -74,7 +74,7 @@ var remove = function(gardrPluginApi) {
             setTimeout(function() {
                 var iframeElement = item.iframe.element;
 
-                if(iframeElement && typeof iframeElement.contentWindow === 'object' &&
+                if(iframeElement && iframeElement.contentWindow &&
                        typeof iframeElement.contentWindow.postMessage === 'function') {
                     xde.sendTo(iframeElement.contentWindow, 'plugin:send-size');
                 }
